@@ -18,10 +18,10 @@ R_b = 18.5
 H_vx = 50
 H_cyl = 150
 H_cone = 250
-R_dip = 23 # Set to 0 for no dipleg
-H_dip = 120.0 # Set to 0 for no dipleg
-R_bin = 100 # Set to 0 for no bin
-H_bin = 300.0 # Set to 0 for no bin
+R_dip = 0 # Set to 0 for no dipleg
+H_dip = 0 # Set to 0 for no dipleg
+R_bin = 0 # Set to 0 for no bin
+H_bin = 0 # Set to 0 for no bin
 
 outletLengthToR_ratio = 10
 inletLengthToRH_ratio = 6.5
