@@ -2,6 +2,7 @@
 This is a tool for the generation of cyclone separator meshes using the classy_blocks library.
 
 # Prerequisites
+- Python 3.8
 - OpenFOAM (any version)
 - classy_blocks (https://github.com/damogranlabs/classy_blocks)
 
