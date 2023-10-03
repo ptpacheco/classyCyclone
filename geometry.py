@@ -18,10 +18,10 @@ R_b = 18.5
 H_vx = 50
 H_cyl = 150
 H_cone = 250
-R_dip = 0 # Set to 0 for no dipleg
-H_dip = 0 # Set to 0 for no dipleg
-R_bin = 0 # Set to 0 for no bin
-H_bin = 0 # Set to 0 for no bin
+R_dip = 0 #23 # Set to 0 for no dipleg
+H_dip = 0 #120.0 # Set to 0 for no dipleg
+R_bin = 0 #100 # Set to 0 for no bin
+H_bin = 0 #300.0 # Set to 0 for no bin
 
 outletLengthToR_ratio = 10
 inletLengthToRH_ratio = 6.5
@@ -109,9 +109,9 @@ if R_dip > R_b:
     if rad_count_rim%2 == 1:
         rad_count_rim += 1
     rad_cellN_rim = rad_cellN_outer*rad_c2c**(rad_count_rim+1)
-    rad_count_rim2 = np.ceil(np.log(1 + (R5b - R4b)*(rad_c2c - 1)/(2*rad_c2c*rad_cellN_rim) )/np.log(rad_c2c))
+    if H_bin > 0: rad_count_rim2 = np.ceil(np.log(1 + (R5b - R4b)*(rad_c2c - 1)/(2*rad_c2c*rad_cellN_rim) )/np.log(rad_c2c))
 else:
-    rad_count_rim2 = np.ceil(np.log(1 + (R5b - R4b)*(rad_c2c - 1)/(2*rad_c2c*rad_cellN_outer) )/np.log(rad_c2c))
+    if H_bin > 0: rad_count_rim2 = np.ceil(np.log(1 + (R5b - R4b)*(rad_c2c - 1)/(2*rad_c2c*rad_cellN_outer) )/np.log(rad_c2c))
 
 
 innerSquareTanCount = (tan_count_core*np.sin(alpha))

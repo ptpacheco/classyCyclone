@@ -75,7 +75,7 @@ else:
 
     # Finally, make blocks
     core_cone = []
-    core_dipleg = []
+    if H_dip != 0: core_dipleg = []
     if H_bin != 0: core_bin = []
     for j in [0,1,2,3]:
         for i in range(len(core_faces)):
@@ -83,7 +83,7 @@ else:
             else: topFace = core_faces[i].copy().rotate(j*np.pi/2, [0,0,1], [0,0,0])
             bottomFace = topFace.copy().scale(ratio = coneBottomContraction, origin = [0,0,H3]).translate(displacement = [0,0,-H_cone])
             core_cone.append( Loft( topFace, bottomFace) )
-            core_dipleg.append( Extrude(bottomFace, (H2-H1) ) )
+            if H_dip != 0: core_dipleg.append( Extrude(bottomFace, (H2-H1) ) )
             if H_bin != 0:
                 core_bin.append( Extrude(bottomFace.copy().translate([0, 0, -H2+H1]), H1) )
 
@@ -102,7 +102,7 @@ else:
 
     # Chopping along 0Z
     core_cone[0].chop(2, count = z_count, c2c_expansion = z_c2c_cone)
-    core_dipleg[-1].chop(2, start_size = coreCellLength*(z_c2c_cone)**z_count )
+    if H_dip != 0: core_dipleg[-1].chop(2, start_size = coreCellLength*(z_c2c_cone)**z_count )
 
     # Chopping in bin:
     if H_bin != 0:
@@ -124,8 +124,9 @@ else:
 
     for i in range(len(core_cone)):
         mesh.add(core_cone[i])
-        core_dipleg[i].set_patch("top","merge")
-        mesh.add(core_dipleg[i])
+        if H_dip != 0:
+            core_dipleg[i].set_patch("top","merge")
+            mesh.add(core_dipleg[i])
         if H_bin != 0:
             core_bin[i].set_patch("bottom","merge_s")
             binmesh.add(core_bin[i])
@@ -186,9 +187,9 @@ if H_dip > 0:
     revolutionFace_vx_dipleg = Face([ [R1b,0,H1], [R1b,0,H2], [R2b,0,H2], [R2b,0,H1]  ])
     revolutionFace_outer_dipleg = Face([ [R2b,0,H1], [R2b,0,H2], [R3b,0,H2], [R3b,0,H1]  ])
     if R_dip > R_b: revolutionFace_rim_dipleg = Face([ [R3b,0,H1], [R3b,0,H2], [R4b,0,H2], [R4b,0,H1]  ])
-vx_dipleg = []
-outer_dipleg = []
-rim_dipleg = []
+    vx_dipleg = []
+    outer_dipleg = []
+    rim_dipleg = []
 
 # Revolution faces for cone
 revolutionFace_vx_cone = Face([ [R1b,0,H2], [R1,0,H3], [R2,0,H3], [R2b,0,H2]  ])
@@ -232,12 +233,10 @@ for i in range(len(Angles) - 1):
     if H_dip > 0:
         # Revolve dipleg
         vx_dipleg.append( Revolve( revolutionFace_vx_dipleg.copy().rotate(Angles[i], [0,0,1], [0,0,0]) , (Angles[i+1] - Angles[i]), [0,0,1], [0,0,0] ) )
-        vx_dipleg[i].chop(1, count = rad_count_vx)#, c2c_expansion = rad_c2c)
         vx_dipleg[i].set_patch("left","merge")
         mesh.add(vx_dipleg[i]) # chop radially
 
         outer_dipleg.append( Revolve( revolutionFace_outer_dipleg.copy().rotate(Angles[i], [0,0,1], [0,0,0]) , (Angles[i+1] - Angles[i]), [0,0,1], [0,0,0] ) )
-        outer_dipleg[i].chop(1, count = rad_count_outer)#, c2c_expansion = rad_c2c)
         outer_dipleg[i].set_patch("left","merge")
         mesh.add(outer_dipleg[i]) # chop radially
 
@@ -276,9 +275,11 @@ for i in range(len(Angles) - 1):
 
     # Revolve cone
     vx_cone.append( Revolve( revolutionFace_vx_cone.copy().rotate(Angles[i], [0,0,1], [0,0,0]) , (Angles[i+1] - Angles[i]), [0,0,1], [0,0,0] ) )
+    vx_cone[i].chop(1, count = rad_count_vx)#, c2c_expansion = rad_c2c)
     mesh.add(vx_cone[i])
 
     outer_cone.append( Revolve( revolutionFace_outer_cone.copy().rotate(Angles[i], [0,0,1], [0,0,0]) , (Angles[i+1] - Angles[i]), [0,0,1], [0,0,0] ) )
+    outer_cone[i].chop(1, count = rad_count_outer)#, c2c_expansion = rad_c2c)
     mesh.add(outer_cone[i])
 
     # Revolve cone to cylinder
@@ -379,5 +380,6 @@ inlet[i].chop(2, start_size = inlet_size)
 mesh.set_default_patch("wallLayers", "wall")
 mesh.write('bodyMesh/system/blockMeshDict', debug_path="./body.vtk")
 
-binmesh.set_default_patch("wall","wall")
-binmesh.write("binMesh/system/blockMeshDict", debug_path="./bin.vtk")
+if H_bin != 0:
+    binmesh.set_default_patch("wall","wall")
+    binmesh.write("binMesh/system/blockMeshDict", debug_path="./bin.vtk")
