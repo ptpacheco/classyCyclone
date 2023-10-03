@@ -3,9 +3,7 @@
 import numpy as np
 
 ## Geometry ID: ###
-# Stairmand, D = 100 mm
-# Dipleg: D = 37 mm, H = 120 mm
-# Bin: D = 200 mm, H = 300 mm
+
 # Units: [mm]
 
 ## Input geometry data ###
@@ -18,10 +16,10 @@ R_b = 18.5
 H_vx = 50
 H_cyl = 150
 H_cone = 250
-R_dip = 0 #23 # Set to 0 for no dipleg
-H_dip = 0 #120.0 # Set to 0 for no dipleg
-R_bin = 0 #100 # Set to 0 for no bin
-H_bin = 0 #300.0 # Set to 0 for no bin
+R_dip = 0  # Set to 0 for no dipleg
+H_dip = 0  # Set to 0 for no dipleg
+R_bin = 0  # Set to 0 for no bin
+H_bin = 0  # Set to 0 for no bin
 
 outletLengthToR_ratio = 10
 inletLengthToRH_ratio = 6.5
