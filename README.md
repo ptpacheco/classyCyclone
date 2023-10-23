@@ -1,13 +1,14 @@
 # classyCyclone
-This is a tool for the generation of cyclone separator meshes using the classy_blocks library.
+This is a tool for the parametric generation of a mesh for a cyclone separator using the classy_blocks Python library.
 
 # Prerequisites
 - Python 3.8
-- OpenFOAM (any version)
+- numpy
+- OpenFOAM
 - classy_blocks (https://github.com/damogranlabs/classy_blocks)
 
 # How to use
-1. Edit the geometry.py file to input the desired geometry data. Cylindrical diplegs and bins can be included in the mesh if so desired.
-2. Run Allrun.sh script
+1. Edit the classyCyclone.py file to input the desired geometry data. Cylindrical diplegs and bins can be included in the mesh if so desired.
+2. Run Allrun.sh
 
-The (unscaled) body mesh can be found in bodyMesh/constant/polyMesh. If a bin is enabled, the body mesh is merged with the bin mesh (grid is coarse here, 2:1 ratio) - the (unscaled) bin mesh is found at binMesh/constant/polyMesh, while the merged mesh is found at mergedMesh/1/polyMesh.
+(CURRENTLY UNTESTED FOR H_B != H_VX)

@@ -1,27 +1,38 @@
 #!/bin/sh
-# Source tutorial run functions
+
+# Source tutorial clean functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-# EDIT THIS INCASE THERE IS NO BIN
-has_bin=true
+python3.8 classyCyclone.py
+cd bodyMesh/
+rm -r constant/polyMesh
+rm -r 1
+blockMesh
 
-# Make main mesh
-python3.8 make_mesh.py
-cd ./bodyMesh
-./Allclean.sh
-runApplication blockMesh
+stitchMesh -perfect master_topStitch1 slave_topStitch1
+rm -r constant/polyMesh
+cp -r 1/polyMesh constant/
+rm -r 1/
 
-# Make bin, if it exists
-if [ "$has_bin" = true ]; then
-  cd ../binMesh
-  ./Allclean.sh
-  runApplication blockMesh
-  # Merge two meshes
-  cd ../mergedMesh
-  ./Allclean.sh
-  cp -r ../bodyMesh/constant/polyMesh constant/
-  runApplication mergeMeshes -overwrite . ../binMesh/
-  runApplication stitchMesh -partial -toleranceDict toleranceDict merge_s merge
-else
-  transformPoints -scale '(0.001 0.001 0.001)'
-fi
+stitchMesh -perfect master_topStitch2 slave_topStitch2
+rm -r constant/polyMesh
+cp -r 1/polyMesh constant/
+rm -r 1/
+
+stitchMesh master_inletStitch slave_inletStitch
+rm -r constant/polyMesh
+cp -r 1/polyMesh constant/
+rm -r 1/
+
+topoSet
+createPatch
+rm -r constant/polyMesh
+cp -r 1/polyMesh constant/
+rm -r 1/
+
+renumberMesh
+rm -r constant/polyMesh
+cp -r 1/polyMesh constant/
+rm -r 1/
+transformPoints -scale '(0.001 0.001 0.001)'
